@@ -1,0 +1,53 @@
+trigger:
+- master
+
+pool:
+  vmImage: 'windows-latest'
+
+steps:
+
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: 'Templates'
+    Contents: '**'
+    TargetFolder: '$(build.artifactstagingdirectory)\Templates'
+    OverWrite: true
+
+- task: AzureResourceManagerTemplateDeployment@3
+  inputs:
+    deploymentScope: 'Subscription'
+    azureResourceManagerConnection: '$(azureResourceManagerConnectionName)'
+    subscriptionId: '$(SubscriptionId)'
+    location: 'Australia East'
+    templateLocation: 'Linked artifact'
+    csmFile: '$(build.artifactstagingdirectory)\Templates\ResourceGroup\template.json'
+    csmParametersFile: '$(build.artifactstagingdirectory)\Templates\ResourceGroup\template.parameters.json'
+    deploymentMode: 'Incremental'
+
+- task: AzureResourceManagerTemplateDeployment@3
+  inputs:
+    deploymentScope: 'Resource Group'
+    azureResourceManagerConnection: '$(azureResourceManagerConnectionName)' 
+    subscriptionId: '$(SubscriptionId)'
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: 'AzureKeyVaultFromTemplateRG'
+    location: 'Australia East'
+    templateLocation: 'Linked artifact'
+    csmFile: '$(build.artifactstagingdirectory)\Templates\KeyVault\template.json'
+    csmParametersFile: '$(build.artifactstagingdirectory)\Templates\KeyVault\template.parameters.json'
+    deploymentMode: 'Incremental'
+
+- task: AzureResourceManagerTemplateDeployment@3
+  inputs:
+    deploymentScope: 'Resource Group'
+    azureResourceManagerConnection: '$(azureResourceManagerConnectionName)' 
+    subscriptionId: '$(SubscriptionId)'
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: 'AzureKeyVaultFromTemplateRG'
+    location: 'Australia East'
+    templateLocation: 'Linked artifact'
+    csmFile: '$(build.artifactstagingdirectory)\Templates\ServiceBus\template.json'
+    csmParametersFile: '$(build.artifactstagingdirectory)\Templates\ServiceBus\template.parameters.json'
+    deploymentMode: 'Incremental'
+
+

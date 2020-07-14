@@ -1,0 +1,2 @@
+# AzureKeyVaultFromTemplate
+A simple tempate to deploy an Azure Service Bus.  Read the blog post <a href="https://salmanalibanani.com/2020/07/14/pushing-secrets-into-azure-key-vault-directly-from-arm-template/" target="_blank">here</a>.
